@@ -18,10 +18,13 @@ struct ParamItem
 	}
 };
 
-typedef std::vector<CPolyline*> CadGroup;
-
 struct CDrawing
 {
+	CDrawing():m_pGroup(nullptr), m_strScriptPathName("")
+	{
+		//m_pGroup = new CCadGroup();
+	}
+
 	void AddItem(const char* szName_, double nVal_);
 	bool Valid()const;
 
@@ -30,7 +33,7 @@ struct CDrawing
 	string m_strScriptPathName;
 
 	//几何
-	CadGroup m_Group;
+	CCadGroup* m_pGroup;
 
 	//参数化
 	std::vector<ParamItem> m_vecParamItems;

@@ -14,17 +14,24 @@ int lua_create_new_polyline(lua_State* L)
 	return 1;
 }
 
+int lua_create_new_group(lua_State* L)
+{
+	CCadGroup** _ppGroup = (CCadGroup**)lua_newuserdata(L, sizeof(CCadGroup*));
+	*_ppGroup = new CCadGroup();
+	return 1;
+}
+
 int lua_set_start(lua_State* L)
 {
 	//取栈底参数
 	CPolyline** _ppPoly = (CPolyline**)lua_touserdata(L, 1);
 	luaL_argcheck(L, _ppPoly != NULL, 1, "invalid user data!");
 
-	//取第一个入参
+	//取第二个入参
 	luaL_checknumber(L, -2);
 	lua_Number _nX = lua_tonumber(L, -2);
 
-	//取第二个入参
+	//取第三个入参
 	luaL_checknumber(L, -1);
 	lua_Number _nY = lua_tonumber(L, -1);
 
@@ -33,20 +40,33 @@ int lua_set_start(lua_State* L)
 	return 0;
 }
 
-int lua_add_node(lua_State* L)
+int lua_insert_node(lua_State* L)
 {
 	//取栈底参数
 	CPolyline** _ppPoly = (CPolyline**)lua_touserdata(L, 1);
 	luaL_argcheck(L, _ppPoly != NULL, 1, "invalid user data!");
 
-	//取第一个入参
+	//取第二个入参
 	lua_Number _nX = lua_tonumber(L, -2);
 
-	//取第二个入参
+	//取第三个入参
 	lua_Number _nY = lua_tonumber(L, -1);
 
-	(*_ppPoly)->AddNode(_nX, _nY);
+	(*_ppPoly)->InsertNode(_nX, _nY);
 
+	return 0;
+}
+
+int lua_emplace_cad(lua_State* L)
+{
+	//取栈底参数
+	CCadGroup** _ppGroup = (CCadGroup**)lua_touserdata(L, 1);
+	luaL_argcheck(L, _ppGroup != NULL, 1, "invalid user data!");
+
+	//取第二个入参
+	CPolyline** _ppCad = (CPolyline**)lua_touserdata(L, -1);
+	
+	(*_ppGroup)->Emplace(*_ppCad);
 	return 0;
 }
 
@@ -56,19 +76,3 @@ int luaopen_polyline_libs(lua_State* L)
 	luaL_newlib(L, ope_lib);
 	return 1;
 }
-
-//static int luaope_api(lua_State* L)
-//{
-//	//static luaL_Reg ope_lib[] = {
-//	//	{ "add", 	lua_add_api},
-//	//	{ "sub", 	lua_sub_api},
-//	//	{ "mul", 	lua_mul_api},
-//
-//	//	{NULL, 		NULL}
-//	//};
-//
-//	// 创建导出库函数
-//	luaL_newlib(L, ope_lib);
-//
-//	return 1;
-//}

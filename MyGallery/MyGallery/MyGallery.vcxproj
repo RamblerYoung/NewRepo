@@ -150,6 +150,7 @@
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="hole_rect.lua" />
     <None Include="Rect.lua" />
     <None Include="Triangle.lua" />
   </ItemGroup>

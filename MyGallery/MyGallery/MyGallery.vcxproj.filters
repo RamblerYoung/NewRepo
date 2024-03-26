@@ -57,5 +57,6 @@
   <ItemGroup>
     <None Include="Rect.lua" />
     <None Include="Triangle.lua" />
+    <None Include="hole_rect.lua" />
   </ItemGroup>
 </Project>

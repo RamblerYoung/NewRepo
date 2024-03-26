@@ -8,13 +8,17 @@ function init(drawing)
 end
 
 function clac()
-	local Rect_obj = Polyline.create()
-	Polyline.set_start(Rect_obj,0,0);
-	Polyline.add_node(Rect_obj,width,0);
-	Polyline.add_node(Rect_obj,width,height);
-	Polyline.add_node(Rect_obj,0,height);
-	Polyline.add_node(Rect_obj,0,0);
-	return Rect_obj;
+	local Rect_obj = Geometry.create_polyline()
+	Geometry.set_start(Rect_obj,0,0);
+	Geometry.insert_node(Rect_obj,width,0);
+	Geometry.insert_node(Rect_obj,width,height);
+	Geometry.insert_node(Rect_obj,0,height);
+	Geometry.insert_node(Rect_obj,0,0);
+
+	local cadgroup=Geometry.create_cadgroup();
+	Geometry.emplace(cadgroup,Rect_obj);
+
+	return cadgroup;
 end
 
 function valid()

@@ -10,12 +10,16 @@ function init(drawing)
 end
 
 function clac()
-	local triangle_obj = Polyline.create()
-	Polyline.set_start(triangle_obj,0,0);
-	Polyline.add_node(triangle_obj,width,0);
-	Polyline.add_node(triangle_obj,peak,height);
-	Polyline.add_node(triangle_obj,0,0);
-	return triangle_obj;
+	local triangle_obj = Geometry.create_polyline()
+	Geometry.set_start(triangle_obj,0,0);
+	Geometry.insert_node(triangle_obj,width,0);
+	Geometry.insert_node(triangle_obj,peak,height);
+	Geometry.insert_node(triangle_obj,0,0);
+
+	local group_obj=Geometry.create_cadgroup();
+	Geometry.emplace(group_obj,triangle_obj);
+
+	return group_obj;
 end
 
 function valid()

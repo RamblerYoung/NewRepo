@@ -11,9 +11,11 @@ using namespace std;
 #include "PolylineReg.h"
 #include "Parameterization.h"
 
+void PrintDrawing(const CDrawing* pDrawing_);
+
 static const luaL_Reg lua_reg_libs[] = {
 	{ "base", luaopen_base }, //系统模块
-	{ "Polyline", luaopen_polyline_libs}, //几何模块
+	{ "Geometry", luaopen_polyline_libs}, //几何模块
 	{ "Drawing", luaopen_parameterization_libs}, //图库参数化
 
 	{ NULL, NULL }
@@ -29,10 +31,10 @@ int main()
 			lua_pop(L, 1);
 		}
 
-		//print_stack(L);
 		//加载脚本
 		//if (luaL_dofile(L, "Triangle.lua"))
-		if (luaL_dofile(L, "Rect.lua")) 
+		if (luaL_dofile(L, "hole_rect.lua"))
+		//if (luaL_dofile(L, "Rect.lua")) 
 		{
 			cout << lua_tostring(L, -1) << endl;
 		}
@@ -51,21 +53,12 @@ int main()
 			return 0;
 		}
 
-		cout << "============Drawing information=============" << endl;
-		cout << "Parameter:" << endl;
-		for (auto _it = _pDrawing->m_vecParamItems.begin(); _it != _pDrawing->m_vecParamItems.end(); ++_it)
-		{
-			cout << _it->strName << ":" << _it->nVal << endl;
-		}
-
 		//2.计算shape
 		lua_getglobal(L, "clac");		// 获取函数，压入栈中
 		// 栈过程：参数出栈->保存参数->参数出栈->保存参数->函数出栈->调用函数->返回结果入栈
 		// 调用函数，调用完成以后，会将返回值压入栈中，0表示参数个数，1表示返回结果个数。
-		//print_stack(L);
 		int iRet = lua_pcall(L, 0, 1, 0);
 
-		//print_stack(L);
 		if (iRet)
 		{
 			print_stack(L);
@@ -76,28 +69,21 @@ int main()
 			return 0;
 		}
 
-		//print_stack(L);
-		if (lua_isuserdata(L, -1))        //取值输出
+		if (lua_isuserdata(L, -1))
 		{
-			//print_stack(L);
-			CPolyline** _ppPoly = (CPolyline**)lua_touserdata(L, -1);
-			//print
-			cout << "Geometry:" << endl;
-			cout << "Start: (" << (*_ppPoly)->GetStart().nX << "," << (*_ppPoly)->GetStart().nX << ")" << endl;
-			cout << "Segs:" << endl;
-			const std::vector<DPOINT>& _vecSeg = (*_ppPoly)->GetSegments();
-			for (auto _it = _vecSeg.cbegin(); _vecSeg.cend() != _it; ++_it)
-			{
-				cout << "(" << _it->nX << "," << _it->nY << ")" << endl;
-			}
+			CCadGroup** _ppgroup = (CCadGroup**)lua_touserdata(L, -1);
+			_pDrawing->m_pGroup = *_ppgroup;
 		}
-
-		cout << "============================================" << endl;
 
 		//3.绘制缩略图
 		//todo ...
+
+		//print
+		PrintDrawing(_pDrawing);
+
 		cout << "\nCurrent lua stack:" << endl;
 		print_stack(L);
+
 		lua_close(L);
 	}
 	else {
@@ -107,6 +93,34 @@ int main()
 	system("pause");
 
 	return 0;
+}
+
+void PrintDrawing(const CDrawing* pDrawing_)
+{
+	cout << "============Drawing information=============" << endl;
+	cout << "\tParameter:" << endl;
+	for (auto _it = pDrawing_->m_vecParamItems.begin(); _it != pDrawing_->m_vecParamItems.end(); ++_it)
+	{
+		cout <<"\t\t"<< _it->strName << ":" << _it->nVal << endl;
+	}
+
+	cout << "\tGeometry:" << endl;
+	cout << "\t\tcad count:" << pDrawing_->m_pGroup->m_vecCad.size()<< endl;
+	for (int nIdx(0); nIdx < pDrawing_->m_pGroup->m_vecCad.size(); ++nIdx)
+	{
+		cout << "\t\t\tPolyline_" << nIdx << endl;
+		CPolyline* _polyline = pDrawing_->m_pGroup->m_vecCad[nIdx];
+		cout << "\t\t\t\tStart: (" << _polyline->GetStart().nX << "," << _polyline->GetStart().nY << ")" << endl;
+		cout << "\t\t\t\tSegs:" << endl;
+		const std::vector<DPOINT>& _vecSeg = _polyline->GetSegments();
+		for (auto _it = _vecSeg.cbegin(); _vecSeg.cend() != _it; ++_it)
+		{
+			cout << "\t\t\t\t\t(" << _it->nX << "," << _it->nY << ")" << endl;
+		}
+	}
+
+
+	cout << "============================================" << endl;
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
