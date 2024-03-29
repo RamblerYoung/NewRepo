@@ -78,11 +78,11 @@ int main()
 		//3.绘制缩略图
 		//todo ...
 
-		//print
+		//4.print
 		PrintDrawing(_pDrawing);
 
-		cout << "\nCurrent lua stack:" << endl;
-		print_stack(L);
+		//cout << "\nCurrent lua stack:" << endl;
+		//print_stack(L);
 
 		lua_close(L);
 	}

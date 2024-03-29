@@ -7,6 +7,10 @@ function init(drawing)
 	Drawing.add(drawing,"¸ß¶È",height);
 end
 
+function change(name,value)
+	--todo...
+end
+
 function clac()
 	local Rect_obj = Geometry.create_polyline()
 	Geometry.set_start(Rect_obj,0,0);

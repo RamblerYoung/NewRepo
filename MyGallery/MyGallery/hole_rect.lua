@@ -1,3 +1,4 @@
+--本文件定义了一个带矩形内孔的矩形图符.
 
 local width=50;
 local height=100;
@@ -13,6 +14,10 @@ function init(drawing)
 	Drawing.add(drawing,"内孔高度",hole_height);
 	Drawing.add(drawing,"内孔左边距",left_margin);
 	Drawing.add(drawing,"内孔下边距",bottom_margin);
+end
+
+function change(name,value)
+	--todo...
 end
 
 function clac()

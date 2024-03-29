@@ -9,6 +9,10 @@ function init(drawing)
 	Drawing.add(drawing,"∑Â÷µµ„",peak);
 end
 
+function change(name,value)
+	--todo...
+end
+
 function clac()
 	local triangle_obj = Geometry.create_polyline()
 	Geometry.set_start(triangle_obj,0,0);
